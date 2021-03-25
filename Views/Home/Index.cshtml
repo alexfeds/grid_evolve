@@ -1,0 +1,18 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+@model IEnumerable<Person>
+
+@(Html.C1().FlexGrid<Person>().Id("flexGrid")
+                    .IsReadOnly(true)
+                    .Bind(Model)
+                    .AutoGenerateColumns(false)
+                    .CssClass("grid")
+                    .Columns(bl =>
+                    {
+                        bl.Add(cb => cb.Binding("ID").Header("ID").Width("0.4*").IsReadOnly(true));
+                        bl.Add(cb => cb.Binding("Name").Header("Name").Width("*").Name("Name"));
+                        bl.Add(cb => cb.Binding("Country").Header("Country").Width("*").Name("Country"));
+                        bl.Add(cb => cb.Binding("Hired").Header("Hired").Width("*").Name("Hired"));
+                    })
+)
