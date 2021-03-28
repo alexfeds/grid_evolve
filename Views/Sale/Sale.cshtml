@@ -1,0 +1,36 @@
+﻿@model IEnumerable<grid_evolve.Models.SaleData>
+
+@{
+    ViewBag.Title = "Sale";
+}
+
+@using C1.Web.Mvc.Grid
+
+<style type="text/css">
+    .grid {
+        height: 500px;
+        border: 2px solid #e0e0e0;
+        font-family: Cambria;
+        font-weight: bold;
+    }
+</style>
+
+@*Instantiate FlexGrid and set its properties*@
+@(Html.C1().FlexGrid<grid_evolve.Models.SaleData>()
+                    .AutoGenerateColumns(false)
+                    .Width(700)
+                    .AllowAddNew(true)
+                    .SelectionMode(C1.Web.Mvc.Grid.SelectionMode.Cell)
+                    .CssClass("grid")
+                    .Bind(Model)
+
+                     //Binding columns data to FlexGrid
+                     .Columns(bl =>
+                     {
+                         bl.Add(cb => cb.Binding("ID"));
+                         bl.Add(cb => cb.Binding("Start"));
+                         bl.Add(cb => cb.Binding("Product"));
+                         bl.Add(cb => cb.Binding("Amount").Format("c"));
+                         bl.Add(cb => cb.Binding("Discount").Format("p0"));
+                         bl.Add(cb => cb.Binding("Active"));
+                     }))

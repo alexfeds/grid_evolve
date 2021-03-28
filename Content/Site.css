@@ -23,3 +23,11 @@ textarea {
     height: 500px;
     border: 2px solid #e0e0e0;
 }
+
+.col-6.button-sec-wrapper {
+   
+}
+
+.action-btn {
+    display: inline-block;
+}
