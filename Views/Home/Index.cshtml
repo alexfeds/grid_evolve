@@ -6,7 +6,7 @@
 @(Html.C1().FlexGrid<Person>().Id("flexGrid")
                     .IsReadOnly(true)
                     .Bind(Model)
-                    .AutoGenerateColumns(false)
+                    .AutoGenerateColumns(true)
                     .CssClass("grid")
                     .Columns(bl =>
                     {
