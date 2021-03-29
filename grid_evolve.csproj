@@ -212,7 +212,6 @@
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
-    <Content Include="Scripts\time_sheet\colorButtonTimeSheet.js" />
     <Content Include="Scripts\esm\popper-utils.js" />
     <Content Include="Scripts\esm\popper-utils.min.js" />
     <Content Include="Scripts\esm\popper.js" />
@@ -312,13 +311,11 @@
     <Content Include="Scripts\src\utils\setAttributes.js" />
     <Content Include="Scripts\src\utils\setStyles.js" />
     <Content Include="Scripts\src\utils\setupEventListeners.js" />
-    <Content Include="Scripts\time_sheet\handleButtonClickTimeSheet.js" />
-    <Content Include="Scripts\time_sheet\popUpTimeSheet.js" />
-    <Content Include="Scripts\time_sheet\utilsTimeSheet.js" />
     <Content Include="Scripts\umd\popper-utils.js" />
     <Content Include="Scripts\umd\popper-utils.min.js" />
     <Content Include="Scripts\umd\popper.js" />
     <Content Include="Scripts\umd\popper.min.js" />
+    <Content Include="Scripts\utilTimeSheet.js" />
     <Content Include="Views\Sale\Sale.cshtml" />
     <Content Include="Views\TimeSheet\TimeSheet.cshtml" />
     <TypeScriptCompile Include="Scripts\app.ts" />

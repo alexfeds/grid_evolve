@@ -116,13 +116,16 @@
                 var rate = 0;
                 var duration = 0;
 
-                if (rowItemObj.hasOwnProperty(myDurationProp)) {
-                    duration = rowItemObj.Duration.toTimeString().split(' ')[0];
-                }
+                if (rowItemObj) {
+                    if (rowItemObj.hasOwnProperty(myDurationProp)) {
+                        duration = rowItemObj.Duration.toTimeString().split(' ')[0];
+                    }
 
-                if (rowItemObj.hasOwnProperty(myHourlyRateProp)) {
-                    rate = rowItemObj.Hourly_Rate
+                    if (rowItemObj.hasOwnProperty(myHourlyRateProp)) {
+                        rate = rowItemObj.Hourly_Rate
+                    }
                 }
+              
 
                 var itemsData = theGrid.collectionView.items;
 
@@ -273,19 +276,6 @@
                 theGrid.newRowAtTop = true;
             })
 
-            // set new row at top
-            document.getElementById('sfDef').addEventListener('click', function (e) {
-                // create the new item, add it to the collection
-                let view = theGrid.collectionView
-                console.log("view ", view)
-
-                view.newItemCreator = function () {
-                    return {
-                        State: 'XXX'
-                    };
-                }
-                console.log("view item", view.items)
-            })
 
             // submit row
             document.getElementById('brSubt').addEventListener('click', function (e) {
@@ -403,10 +393,7 @@
         <div class="col-8">
             <div class="row">
                 <div class="col-6 button-sec-wrapper">
-                    <div class="action-btn">
-                        <button type="button" class="btn btn-primary" id="sfDef">New</button>
-                    </div>
-
+            
                     <div class="action-btn">
                         <button type="button" class="btn btn-primary" id="brBut">Add</button>
                     </div>
@@ -435,7 +422,7 @@
             @*Instantiate FlexGrid and set its properties*@
             @(Html.C1().FlexGrid<grid_evolve.Models.TimeSheet>()
         .Id("theGrid")
-        .Width(1200)
+        .Width(1080)
         .AutoRowHeights(true)
         .CssClass("grid")
     //Binding columns data to FlexGrid
