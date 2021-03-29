@@ -8,7 +8,6 @@
     @Html.C1().Styles()
     @Scripts.Render("~/Scripts/jquery-3.0.0.min.js")
     @Scripts.Render("~/Scripts/bootstrap.min.js")
-  
 
 
     @RenderSection("styles", required: false)
@@ -17,26 +16,24 @@
 
 </head>
 <body>
-    @*<div class="navbar navbar-inverse navbar-fixed-top">
-            <div class="container">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    @Html.ActionLink("MVC Project", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-                </div>
-                <div class="navbar-collapse collapse">
-                    <ul class="nav navbar-nav">
-                        <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                        <li>@Html.ActionLink("About", "About", "Home")</li>
-                        <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
-                    </ul>
-                    @Html.Partial("_LoginPartial")
-                </div>
-            </div>
-        </div>*@
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" style="margin-bottom: 25px;">
+      
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item" style="margin-right: 10px">@Html.ActionLink("Home", "Index", "Home")</li>
+                <li class="nav-item">@Html.ActionLink("TimeSheet", "TimeSheet", "TimeSheet")</li>
+
+
+            </ul>
+            <form class="form-inline my-2 my-lg-0">
+                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            </form>
+        </div>
+    </nav>
+
     <div class="container body-content">
         @RenderBody()
         <hr />
