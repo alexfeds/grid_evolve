@@ -128,13 +128,25 @@
               
 
                 var itemsData = theGrid.collectionView.items;
-
+                var resultTimeWork = 0;
+                var resultTonumfromCurrency = 0;
                 //calculus
                 if (duration) {
+                    console.log("duration in", duration);
                     duration = roundTime(duration, 15)
+                    console.log("roundTime duration out", duration);
                     var timeToDec = timeToDecimal(duration)
-                    var resultTimeWork = timeToDec * rate;
-
+                    console.log("umberFromtimeToDec", timeToDec);
+                    console.log("rate", rate);
+                    if (typeof rate == "string") {
+                        resultTonumfromCurrency = parseFloat(rate.substring(1));
+                    } else {
+                        resultTonumfromCurrency = rate;
+                    }
+                
+                    resultTimeWork = timeToDec * resultTonumfromCurrency;
+                    console.log("resultTimeWork", resultTimeWork);
+                    console.log("rate", resultTonumfromCurrency);
                 }
                 itemsData[e.row].Total = resultTimeWork;
                 theGrid.refresh();
@@ -172,6 +184,7 @@
                 if (e.target.tagName == 'BUTTON') {
                     // get button's data item
                     var item = wijmo.closest(e.target, '.wj-cell');
+                    console.log("item", item)
                     if (item) {
                         console.log("item", item.dataItem)
                         var itemD = item.dataItem
@@ -247,26 +260,34 @@
             var index = 0;
             //sets value on new row
             function setValueOnNewRowCreate() {
+
                 var view = theGrid.collectionView
                 var rate = 0; //default
                 rate = parseFloat(rate).toFixed(2)
                 var rateinDec = 0;
-                rateinDec = parseFloat(rateinDec).toFixed(2)
+                rateinDec = parseFloat(rateinDec).toFixed(2);
+
+
                 view.newItemCreator = function () {
 
                     rate = document.getElementById("hourSetf").value
 
                     if (rate) {
                         rate = parseFloat(rate);
-                        rateinDec = rate.toFixed(2)
+                        rateinDec = rate.toFixed(2);
+                        console.log("got rate")
+                    } else {
+                        console.log("no rate")
+                        rateinDec = parseFloat(0).toFixed(2);
                     }
-
+                    //console.log("rateinDec", rateinDec)
+                  
                     return {
                         Id: index++,
                         State: "Active",
                         Hourly_Rate: '$' + rateinDec
                     };
-
+          
                 }
             }
             setValueOnNewRowCreate();
@@ -275,7 +296,7 @@
             document.getElementById('brBut').addEventListener('click', function (e) {
                 theGrid.newRowAtTop = true;
             })
-
+   
 
             // submit row
             document.getElementById('brSubt').addEventListener('click', function (e) {
