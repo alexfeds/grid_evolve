@@ -6,6 +6,182 @@
 
 @using C1.Web.Mvc.Grid
 
+
+
+@section Scripts{
+    <script type="text/javascript">
+        c1.documentReady(function () {
+
+            var theGrid = wijmo.Control.getControl('#theGrid'); //gets reference to main grid table
+            //theGrid.allowAddNew = true; //allows to add new row in table
+            //theGrid.allowDelete = true; //allow delete row
+            //theGrid.rows.defaultSize = 45; //sets height of row
+
+
+
+            const view = theGrid.collectionView;
+            // initialize with ID and year for new item
+            view.newItemCreator = function () {
+                return {
+                    id: view.totalItemCount,
+                    year: (new Date()).getFullYear()
+                }
+            }
+
+            document.getElementById('addNew').addEventListener('click', function (e) {
+                // add a new empty item and commit it
+                const newItem = view.addNew();
+                view.commitNew();
+                var len = theGrid.rows.length,
+                    total = view.totalItemCount;
+                console.log("total", total)
+                // index of the new item
+                var idx = 0;
+                // get the sourceCollection
+                const src = view.sourceCollection;
+                console.log("src", src)
+                // remove the item
+                src.splice(total - 1, 1);
+                console.log("src.splice", src)
+                // add it to the index
+                src.splice(idx, 0, newItem);
+                console.log("src.splice newItem readed top", src)
+                //// refresh the collection view
+                view.refresh();
+                //// scroll to the new item
+                //theGrid.scrollIntoView(idx, 0);
+                //// add a timeout so that the 
+                //// editing starts only when the 
+                //// scroll position is changed
+                //setTimeout(() => {
+                //    // edit the new item using grid
+                //    editItem(newItem);
+                //});
+            });
+
+            //
+            // make rows taller to accommodate edit buttons and input controls
+            theGrid.rows.defaultSize = 40;
+            //
+            // custom formatter to paint buttons and editors
+            theGrid.formatItem.addHandler(function (s, e) {
+                if (e.panel == s.cells) {
+                    var col = s.columns[e.col], item = s.rows[e.row].dataItem;
+                    //
+                    if (item == currentEditItem) {
+                        //
+                        // create editors and buttons for the item being edited
+                        switch (col.binding) {
+                            case 'Actions':
+                                e.cell.innerHTML = document.getElementById('tplBtnEditMode').innerHTML;
+                                e.cell['dataItem'] = item;
+                                break;
+                            case 'ID':
+                            case 'Start':
+                            case 'Product':
+                            case 'Amount':
+                            case 'Discount':
+                            case 'Active':
+                                e.cell.innerHTML = '<input class="form-control" ' +
+                                    'id="' + col.binding + '" ' +
+                                    'value="' + s.getCellData(e.row, e.col, true) + '"/>';
+                                break;
+                        }
+                    }
+                    else {
+                        //
+                        // create buttons for items not being edited
+                        switch (col.binding) {
+                            case 'Actions':
+                                e.cell.innerHTML = document.getElementById('tplBtnViewMode').innerHTML;
+                                e.cell['dataItem'] = item;
+                                break;
+                        }
+                    }
+                }
+            });
+            //
+            // handle button clicks
+            theGrid.addEventListener(theGrid.hostElement, 'click', function (e) {
+                let targetBtn;
+                if (e.target instanceof HTMLButtonElement) {
+                    targetBtn = e.target;
+                }
+                else if (e.target instanceof HTMLSpanElement && e.target.classList.contains('glyphicon')) {
+                    targetBtn = e.target.parentElement;
+                }
+                if (targetBtn) {
+                    //
+                    // get button's data item
+                    var item = wijmo.closest(targetBtn, '.wj-cell')['dataItem'];
+                    //
+                    // handle buttons
+                    switch (targetBtn.id) {
+                        //
+                        // start editing this item
+                        case 'btnEdit':
+                            editItem(item);
+                            break;
+                        //
+                        // remove this item from the collection
+                        case 'btnDelete':
+                            theGrid.collectionView.remove(item);
+                            break;
+                        //
+                        // commit edits
+                        case 'btnOK':
+                            commitEdit();
+                            break;
+                        //
+                        // cancel edits
+                        case 'btnCancel':
+                            cancelEdit();
+                            break;
+                    }
+                }
+            });
+            //
+            // exit edit mode when scrolling the grid or losing focus
+            theGrid.scrollPositionChanged.addHandler(cancelEdit);
+            theGrid.lostFocus.addHandler(cancelEdit);
+            //
+            // editing commands
+            var currentEditItem = null;
+            //
+            function editItem(item) {
+                cancelEdit();
+                currentEditItem = item;
+                theGrid.invalidate();
+            }
+            //
+            function commitEdit() {
+                if (currentEditItem) {
+                    theGrid.columns.forEach(function (col) {
+                        var input = theGrid.hostElement.querySelector('#' + col.binding);
+                        if (input) {
+                            var value = wjCore.changeType(input.value, col.dataType, col.format);
+                            if (wjCore.getType(value) == col.dataType) {
+                                currentEditItem[col.binding] = value;
+                            }
+                        }
+                    });
+                }
+                currentEditItem = null;
+                theGrid.invalidate();
+            }
+            //
+            function cancelEdit() {
+                if (currentEditItem) {
+                    currentEditItem = null;
+                    theGrid.invalidate();
+                }
+            }
+
+        })
+
+    </script>
+}
+
 <style type="text/css">
     .grid {
         height: 500px;
@@ -17,8 +193,9 @@
 
 @*Instantiate FlexGrid and set its properties*@
 @(Html.C1().FlexGrid<grid_evolve.Models.SaleData>()
+                    .Id("theGrid")
                     .AutoGenerateColumns(false)
-                    .Width(700)
+                    .Width(1000)
                     .AllowAddNew(true)
                     .SelectionMode(C1.Web.Mvc.Grid.SelectionMode.Cell)
                     .CssClass("grid")
@@ -33,4 +210,31 @@
                          bl.Add(cb => cb.Binding("Amount").Format("c"));
                          bl.Add(cb => cb.Binding("Discount").Format("p0"));
                          bl.Add(cb => cb.Binding("Active"));
+                         bl.Add(cb => cb.Binding("Actions").Width("150"));
                      }))
+
+<br>
+<br>
+<button class="btn btn-default" id="addNew">Add New</button>
+<!-- template for buttons on items in view mode -->
+<div id="tplBtnViewMode" style="display:none">
+    <button id="btnEdit" class="btn btn-light btn-sm">
+        <span class="glyphicon glyphicon-pencil"></span> Edit
+    </button>
+    <button id="btnDelete" class="btn btn-light btn-sm">
+        <span class="glyphicon glyphicon-remove"></span> Delete
+    </button>
+    <div>
+
+        <!-- template for buttons on items in edit mode -->
+        <div id="tplBtnEditMode" style="display:none">
+            <button id="btnOK" class="btn btn-primary btn-sm">
+                <span class="glyphicon glyphicon-ok"></span> OK
+            </button>
+            <button id="btnCancel" class="btn btn-warning btn-sm">
+                <span class="glyphicon glyphicon-ban-circle"></span> Cancel
+            </button>
+        </div>
+        </div>
+
+</div>

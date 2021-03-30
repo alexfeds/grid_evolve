@@ -50,7 +50,7 @@
             theGrid.allowAddNew = true; //allows to add new row in table
             theGrid.allowDelete = true; //allow delete row
             theGrid.rows.defaultSize = 45; //sets height of row
-
+          
 
             //====================================START====================================
             // BUTTONS-COLOR-CHANGE
@@ -221,13 +221,13 @@
 
             // editing commands
             var currentEditItem = null;
-
+           
             function editItem(item) {
                 cancelEdit();
                 currentEditItem = item;
                 theGrid.invalidate();
             }
-
+         
             function commitEdit() {
                 if (currentEditItem) {
                     theGrid.columns.forEach(function (col) {
@@ -243,7 +243,7 @@
                 currentEditItem = null;
                 theGrid.invalidate();
             }
-
+          
             function cancelEdit() {
                 if (currentEditItem) {
                     currentEditItem = null;
@@ -294,8 +294,17 @@
 
             // set new row at top
             document.getElementById('brBut').addEventListener('click', function (e) {
-                theGrid.newRowAtTop = true;
-            })
+                var view = theGrid.collectionView
+                // add a new empty item and commit it
+                const newItem = view.addNew();
+                view.commitNew();
+
+                var len = theGrid.rows.length;
+                // scroll to the new item
+                theGrid.scrollIntoView(len, 0);
+                // edit the new item using grid
+                editItem(newItem);
+            });
    
 
             // submit row
