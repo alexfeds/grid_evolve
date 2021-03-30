@@ -10,7 +10,7 @@ namespace grid_evolve.Controllers
     public class SaleController : Controller
     {
 
-        public static List<SaleData> sale = SaleData.GetData(15).ToList();
+        public static List<SaleData> sale = SaleData.GetData(5).ToList();
         // GET: Sale
         public ActionResult Sale()
         {
